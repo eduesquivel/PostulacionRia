@@ -5,56 +5,11 @@ import { useState, useEffect } from "react";
 // --- TIPOS ---
 type Rates = Record<string, number>;
 
-// --- COMPONENTES UI (Spinner, Card, Select) ---
-// (Se mantienen igual que en la versión anterior para consistencia)
 
-const Spinner = ({ className = "" }: { className?: string }) => (
-  <svg
-    className={`animate-spin h-5 w-5 ${className}`}
-    xmlns="http://www.w3.org/2000/svg"
-    fill="none"
-    viewBox="0 0 24 24"
-  >
-    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-  </svg>
-);
+import Spinner from "./components/spinner";
+import Card from "./components/card";
+import Select from "./components/select";
 
-const Card = ({ children, className = "" }: { children: React.ReactNode; className?: string }) => (
-  <div className={`bg-white rounded-xl shadow-md p-6 border border-slate-100 ${className}`}>
-    {children}
-  </div>
-);
-
-const Select = ({ 
-  label, 
-  value, 
-  options, 
-  onChange,
-  disabled 
-}: { 
-  label: string; 
-  value: string; 
-  options: string[]; 
-  onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
-  disabled?: boolean;
-}) => (
-  <div className="flex flex-col gap-1">
-    <label className="text-sm font-medium text-slate-500">{label}</label>
-    <select
-      value={value}
-      onChange={onChange}
-      disabled={disabled}
-      className="p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none bg-slate-50 disabled:opacity-50"
-    >
-      {options.map((cur) => (
-        <option key={cur} value={cur}>
-          {cur}
-        </option>
-      ))}
-    </select>
-  </div>
-);
 
 // --- COMPONENTE PRINCIPAL ---
 export default function CurrencyDashboard() {
@@ -67,11 +22,11 @@ export default function CurrencyDashboard() {
   const [amount, setAmount] = useState<number>(1);
   const [fromCurrency, setFromCurrency] = useState("USD");
   const [toCurrency, setToCurrency] = useState("EUR");
-  
+
   // NUEVO: Guardamos la tasa unitaria (1 FROM = X TO)
   const [exchangeRate, setExchangeRate] = useState<number | null>(null);
   const [convertedResult, setConvertedResult] = useState<number | null>(null);
-  
+
   const [converting, setConverting] = useState(false); // Spinner solo para cambio de moneda
 
   // Estados del Overview de Tasas
@@ -119,22 +74,22 @@ export default function CurrencyDashboard() {
         );
         const data = await res.json();
         const newRate = data.rates[toCurrency];
-        
+
         // BONUS: Fetch histórico para tendencia (usamos amount=1 también)
         const today = new Date();
         const yesterday = new Date(today);
-        yesterday.setDate(yesterday.getDate() - 2); 
+        yesterday.setDate(yesterday.getDate() - 2);
         const dateStr = yesterday.toISOString().split('T')[0];
-        
+
         const histRes = await fetch(
-           `https://api.frankfurter.app/${dateStr}?amount=1&from=${fromCurrency}&to=${toCurrency}`
+          `https://api.frankfurter.app/${dateStr}?amount=1&from=${fromCurrency}&to=${toCurrency}`
         );
         const histData = await histRes.json();
         const oldRate = histData.rates[toCurrency];
 
         // Guardamos la tasa unitaria
         setExchangeRate(newRate);
-        
+
         // Calculamos tendencia
         if (newRate > oldRate) setTrend("up");
         else if (newRate < oldRate) setTrend("down");
@@ -185,7 +140,7 @@ export default function CurrencyDashboard() {
       <Spinner className="text-orange-600 w-10 h-10" />
     </div>
   );
-  
+
   if (error) return <div className="text-red-500 text-center p-10">{error}</div>;
 
   return (
@@ -196,13 +151,13 @@ export default function CurrencyDashboard() {
       </header>
 
       <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6">
-        
+
         {/* SECCIÓN 1: CONVERTIDOR */}
         <Card>
           <h2 className="text-xl font-semibold mb-6 flex items-center gap-2">
             💱 Currency Converter
           </h2>
-          
+
           <div className="space-y-4">
             <div>
               <label className="text-sm font-medium text-slate-500">Amount</label>
@@ -217,24 +172,24 @@ export default function CurrencyDashboard() {
             </div>
 
             <div className="grid grid-cols-2 gap-4">
-              <Select 
-                label="From" 
-                value={fromCurrency} 
-                options={currencies} 
-                onChange={(e) => setFromCurrency(e.target.value)} 
+              <Select
+                label="From"
+                value={fromCurrency}
+                options={currencies}
+                onChange={(e) => setFromCurrency(e.target.value)}
               />
-              <Select 
-                label="To" 
-                value={toCurrency} 
-                options={currencies} 
-                onChange={(e) => setToCurrency(e.target.value)} 
+              <Select
+                label="To"
+                value={toCurrency}
+                options={currencies}
+                onChange={(e) => setToCurrency(e.target.value)}
               />
             </div>
 
             {/* CAJA DE RESULTADO */}
             <div className="mt-8 p-4 bg-orange-50 rounded-lg border border-orange-100 min-h-[120px] flex flex-col justify-center">
               <p className="text-sm text-orange-600 font-medium mb-1">Converted Amount</p>
-              
+
               {converting ? (
                 // LOADING: Solo aparece si cambian las monedas
                 <div className="flex items-center gap-2 py-2">
@@ -245,10 +200,10 @@ export default function CurrencyDashboard() {
                 // RESULTADO: Se actualiza instantáneamente al escribir
                 <>
                   <div className="text-3xl font-bold text-slate-900">
-                    {convertedResult ? convertedResult.toFixed(2) : '0.00'} 
+                    {convertedResult ? convertedResult.toFixed(2) : '0.00'}
                     <span className="text-lg text-slate-500 ml-2">{toCurrency}</span>
                   </div>
-                  
+
                   {fromCurrency !== toCurrency && exchangeRate && (
                     <div className="mt-2 flex items-center gap-2 text-sm animate-in fade-in duration-300">
                       {/* Mostrar Tasa de Cambio Unitaria */}
@@ -274,7 +229,7 @@ export default function CurrencyDashboard() {
             <div className="flex flex-col">
               <h1 className='pb-1 text-sm font-medium text-slate-500'>Base Rate</h1>
               <div className="w-24">
-                <select 
+                <select
                   value={baseCurrency}
                   onChange={(e) => setBaseCurrency(e.target.value)}
                   disabled={ratesLoading}
@@ -296,14 +251,14 @@ export default function CurrencyDashboard() {
               </thead>
               <tbody className="divide-y divide-slate-100 relative">
                 {ratesLoading ? (
-                   <tr>
-                     <td colSpan={2} className="py-20 text-center">
-                       <div className="flex flex-col items-center justify-center gap-2">
-                         <Spinner className="text-blue-500 w-8 h-8" />
-                         <span className="text-slate-400">Loading new rates...</span>
-                       </div>
-                     </td>
-                   </tr>
+                  <tr>
+                    <td colSpan={2} className="py-20 text-center">
+                      <div className="flex flex-col items-center justify-center gap-2">
+                        <Spinner className="text-blue-500 w-8 h-8" />
+                        <span className="text-slate-400">Loading new rates...</span>
+                      </div>
+                    </td>
+                  </tr>
                 ) : (
                   Object.entries(rates).map(([curr, rate]) => (
                     <tr key={curr} className="hover:bg-slate-50">
