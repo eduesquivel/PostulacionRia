@@ -8,7 +8,8 @@ type Rates = Record<string, number>;
 
 import Spinner from "./components/spinner";
 import Card from "./components/card";
-import Select from "./components/select";
+import CurrencyConverter from "./components/currencyConverter";
+import LiveRates from "./components/liveRates";
 
 
 // --- COMPONENTE PRINCIPAL ---
@@ -159,120 +160,31 @@ export default function CurrencyDashboard() {
           </h2>
 
           <div className="space-y-4">
-            <div>
-              <label className="text-sm font-medium text-slate-500">Amount</label>
-              <input
-                type="number"
-                value={amount}
-                onChange={(e) => setAmount(parseFloat(e.target.value))}
-                className="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500 outline-none text-lg font-mono"
-                min="0"
-                placeholder="0"
-              />
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <Select
-                label="From"
-                value={fromCurrency}
-                options={currencies}
-                onChange={(e) => setFromCurrency(e.target.value)}
-              />
-              <Select
-                label="To"
-                value={toCurrency}
-                options={currencies}
-                onChange={(e) => setToCurrency(e.target.value)}
-              />
-            </div>
-
-            {/* CAJA DE RESULTADO */}
-            <div className="mt-8 p-4 bg-orange-50 rounded-lg border border-orange-100 min-h-[120px] flex flex-col justify-center">
-              <p className="text-sm text-orange-600 font-medium mb-1">Converted Amount</p>
-
-              {converting ? (
-                // LOADING: Solo aparece si cambian las monedas
-                <div className="flex items-center gap-2 py-2">
-                  <Spinner className="text-orange-600" />
-                  <span className="text-slate-400 text-lg">Updating rates...</span>
-                </div>
-              ) : (
-                // RESULTADO: Se actualiza instantáneamente al escribir
-                <>
-                  <div className="text-3xl font-bold text-slate-900">
-                    {convertedResult ? convertedResult.toFixed(2) : '0.00'}
-                    <span className="text-lg text-slate-500 ml-2">{toCurrency}</span>
-                  </div>
-
-                  {fromCurrency !== toCurrency && exchangeRate && (
-                    <div className="mt-2 flex items-center gap-2 text-sm animate-in fade-in duration-300">
-                      {/* Mostrar Tasa de Cambio Unitaria */}
-                      <span className="text-slate-500 text-xs mr-2">
-                        1 {fromCurrency} = {exchangeRate.toFixed(4)} {toCurrency}
-                      </span>
-
-                      {trend === "up" && <span className="text-green-600 bg-green-100 px-2 py-0.5 rounded text-xs font-medium">Trending Up ↗</span>}
-                      {trend === "down" && <span className="text-red-600 bg-red-100 px-2 py-0.5 rounded text-xs font-medium">Trending Down ↘</span>}
-                      {trend === "neutral" && <span className="text-slate-500 bg-slate-100 px-2 py-0.5 rounded text-xs font-medium">Stable -</span>}
-                    </div>
-                  )}
-                </>
-              )}
-            </div>
+            <CurrencyConverter
+              amount={amount}
+              setAmount={setAmount}
+              fromCurrency={fromCurrency}
+              setFromCurrency={setFromCurrency}
+              toCurrency={toCurrency}
+              setToCurrency={setToCurrency}
+              currencies={currencies}
+              converting={converting}
+              convertedResult={convertedResult}
+              exchangeRate={exchangeRate}
+              trend={trend}
+            />
           </div>
         </Card>
 
         {/* SECCIÓN 2: LIVE RATES (Sin cambios mayores) */}
         <Card>
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-xl font-semibold">Live Rates</h2>
-            <div className="flex flex-col">
-              <h1 className='pb-1 text-sm font-medium text-slate-500'>Base Rate</h1>
-              <div className="w-24">
-                <select
-                  value={baseCurrency}
-                  onChange={(e) => setBaseCurrency(e.target.value)}
-                  disabled={ratesLoading}
-                  className="w-full p-1 text-sm border border-slate-300 rounded bg-slate-50 disabled:opacity-50"
-                >
-                  {currencies.map(c => <option key={c} value={c}>{c}</option>)}
-                </select>
-              </div>
-            </div>
-          </div>
-
-          <div className="overflow-hidden rounded-lg border border-slate-200 min-h-[300px]">
-            <table className="w-full text-sm text-left">
-              <thead className="bg-slate-100 text-slate-600 uppercase text-xs">
-                <tr>
-                  <th className="px-4 py-3">Currency</th>
-                  <th className="px-4 py-3 text-right">Rate (1 {baseCurrency})</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100 relative">
-                {ratesLoading ? (
-                  <tr>
-                    <td colSpan={2} className="py-20 text-center">
-                      <div className="flex flex-col items-center justify-center gap-2">
-                        <Spinner className="text-blue-500 w-8 h-8" />
-                        <span className="text-slate-400">Loading new rates...</span>
-                      </div>
-                    </td>
-                  </tr>
-                ) : (
-                  Object.entries(rates).map(([curr, rate]) => (
-                    <tr key={curr} className="hover:bg-slate-50">
-                      <td className="px-4 py-3 font-medium">{curr}</td>
-                      <td className="px-4 py-3 text-right font-mono">{rate.toFixed(4)}</td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
-          <p className="text-xs text-slate-400 mt-4 text-center">
-            Rates updated daily by European Central Bank
-          </p>
+          <LiveRates
+            baseCurrency={baseCurrency}
+            setBaseCurrency={setBaseCurrency}
+            ratesLoading={ratesLoading}
+            currencies={currencies}
+            rates={rates}
+          />
         </Card>
       </div>
     </main>
