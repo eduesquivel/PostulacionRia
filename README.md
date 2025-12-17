@@ -1,41 +1,93 @@
-<<<<<<< HEAD
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Ria Currency Exchange Dashboard 💱
 
-## Getting Started
+A modern, high-performance currency exchange dashboard built with **Next.js 14 (App Router)**, **TypeScript**, and **Tailwind CSS**. This application allows users to convert currencies in real-time and monitor exchange rates against a base currency using the Frankfurter API.
 
-First, run the development server:
+## 🚀 Project Overview
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+This project was developed as part of the Ria Software Engineer Internship coding challenge. It focuses on **code quality**, **clean architecture**, and **user experience (UX)**.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Key Features
+* **Real-time Conversion:** Convert amounts between different currencies instantly.
+* **Optimized Performance:** Calculation logic runs client-side after the initial rate fetch to minimize API usage and latency.
+* **Live Rates Table:** View top 10 major currencies against a customizable base currency.
+* **Responsive Design:** Fully responsive UI built with Tailwind CSS, suitable for mobile and desktop.
+* **Robust Error Handling:** Graceful handling of API errors and network states.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 💡 Innovation Feature: Market Trend Indicator
 
-## Learn More
+> *"Should I send money now, or wait until tomorrow?"*
 
-To learn more about Next.js, take a look at the following resources:
+For the **Bonus Feature**, I implemented a **Market Trend Indicator** (Trending Up ↗ / Down ↘).
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### How it works:
+When a user selects a currency pair, the app fetches the current rate AND the rate from **48 hours ago**. It compares the two values to determine the trend.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Why I chose it:
+Users sending money internationally care deeply about the *timing* of their transfer. A simple number isn't enough; knowing if the rate is improving or worsening helps users make informed financial decisions. This adds real product value beyond a simple calculator.
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 🛠️ Technical Decisions & Trade-offs
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-=======
-# Postulaci-n-Ria
-Postulación para Internship en Ria.
->>>>>>> 9f81cffd7dd7bf82dfda015263ca325a136cefbd
+### 1. Client-Side Calculation Optimization
+**Trade-off:** Instead of calling the API every time the user types in the "Amount" input, the app fetches the *Unit Exchange Rate* (1 Unit) only when the currency pair changes.
+**Benefit:**
+* **Zero Latency:** The calculation (`Amount * Rate`) happens instantly on the client side.
+* **API Efficiency:** Drastically reduces the number of HTTP requests, preventing rate-limiting issues.
+
+### 2. Historical Data Window (48 Hours)
+**Decision:** For the trend feature, I compare against data from 2 days ago instead of "yesterday".
+**Reasoning:** Financial markets often close on weekends. A 48-hour window smooths out potential gaps where "yesterday's" data might be identical to today's if it was a Sunday, providing a more reliable trend indicator.
+
+### 3. Component Architecture
+I followed a "Separation of Concerns" principle:
+* **Logic:** API calls and state management are handled via `useEffect` hooks with clean dependency arrays.
+* **UI:** Reusable components like `Card` and `Select` were created to keep the main page clean and maintainable (DRY principle).
+
+---
+
+## 🤖 AI Usage Declaration
+
+In the spirit of transparency (as requested in the requirements), I utilized AI tools (Gemini) for the following:
+
+1.  **Scaffolding:** To quickly generate the initial boilerplate for the API fetch logic and TypeScript interfaces.
+2.  **Tailwind Styling:** To suggest optimal utility classes for the responsive layout and animations (e.g., `animate-in`, `fade-in`).
+3.  **Refactoring:** Used as a pair programmer to optimize the `useEffect` logic, ensuring we don't over-fetch data when the user types rapidly.
+
+*All code was reviewed, tested, and understood by me before implementation.*
+
+---
+
+## 📦 Setup Instructions
+
+1.  **Clone the repository:**
+    ```bash
+    git clone <your-repo-url>
+    cd <your-repo-folder>
+    ```
+
+2.  **Install dependencies:**
+    ```bash
+    npm install
+    # or
+    pnpm install
+    ```
+
+3.  **Run the development server:**
+    ```bash
+    npm run dev
+    ```
+
+4.  **Open the app:**
+    Visit `http://localhost:3000` in your browser.
+
+---
+
+## 🔮 Future Improvements
+
+With more time, I would add:
+* **Historical Charts:** A visual line chart using Recharts to show the rate history over 30 days.
+* **Favorite Pairs:** Use `localStorage` to save the user's most frequent currency pairs.
+* **Unit Testing:** Implement Jest and React Testing Library to ensure calculation accuracy.
