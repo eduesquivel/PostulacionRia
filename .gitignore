@@ -12,7 +12,6 @@
 !.yarn/versions
 =======
 .pnp.js
->>>>>>> 9f81cffd7dd7bf82dfda015263ca325a136cefbd
 
 # testing
 /coverage
@@ -42,7 +41,6 @@ yarn-error.log*
 # local env files
 .env*.local
 .env
->>>>>>> 9f81cffd7dd7bf82dfda015263ca325a136cefbd
 
 # vercel
 .vercel
