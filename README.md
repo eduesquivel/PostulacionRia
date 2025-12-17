@@ -2,6 +2,11 @@
 
 A modern, high-performance currency exchange dashboard built with **Next.js 14 (App Router)**, **TypeScript**, and **Tailwind CSS**. This application allows users to convert currencies in real-time and monitor exchange rates against a base currency using the Frankfurter API.
 
+## 🌐︎ Deployment
+
+The application is fully deployed and hosted on **Vercel**. You can view the live demo here:
+👉 **[Click here to open the Live App](https://postulacion-ria.vercel.app/)**
+
 ## 🚀 Project Overview
 
 This project was developed as part of the Ria Software Engineer Internship coding challenge. It focuses on **code quality**, **clean architecture**, and **user experience (UX)**.
