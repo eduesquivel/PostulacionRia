@@ -54,7 +54,7 @@ In the spirit of transparency (as requested in the requirements), I utilized AI 
 
 1.  **Scaffolding:** To quickly generate the initial boilerplate for the API fetch logic and TypeScript interfaces.
 2.  **Tailwind Styling:** To suggest optimal utility classes for the responsive layout and animations (e.g., `animate-in`, `fade-in`).
-3.  **Refactoring:** Used as a pair programmer to optimize the `useEffect` logic, ensuring we don't over-fetch data when the user types rapidly.
+3.  **Refactoring:** Used as a pair programmer to optimize the `useEffect` logic, ensuring we don't over-fetch data when the user types rapidly. Also, used to create components in order to allow for separation of concerns.
 
 *All code was reviewed, tested, and understood by me before implementation.*
 
@@ -64,8 +64,8 @@ In the spirit of transparency (as requested in the requirements), I utilized AI 
 
 1.  **Clone the repository:**
     ```bash
-    git clone <your-repo-url>
-    cd <your-repo-folder>
+    git clone https://github.com/eduesquivel/PostulacionRia
+    cd PostulacionRia
     ```
 
 2.  **Install dependencies:**
@@ -88,6 +88,7 @@ In the spirit of transparency (as requested in the requirements), I utilized AI 
 ## 🔮 Future Improvements
 
 With more time, I would add:
+* **Fees explanation:** A short explanation on what are the fees that the service would charge for sending money (if it actually did send money). Transparency would definitely gain users' trust.
 * **Historical Charts:** A visual line chart using Recharts to show the rate history over 30 days.
 * **Favorite Pairs:** Use `localStorage` to save the user's most frequent currency pairs.
 * **Unit Testing:** Implement Jest and React Testing Library to ensure calculation accuracy.
